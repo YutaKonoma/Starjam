@@ -16,7 +16,7 @@ public class SearchManager : MonoBehaviour
     [SerializeField] List<Color> _materialColor = new List<Color>();
 
     [Tooltip("マップデータの配列")]
-    BlockData[,] mapData;
+    [SerializeField]BlockData[,] mapData;
 
     [Tooltip("既に探索した座標")]
     int[,] mapOld;
@@ -30,6 +30,8 @@ public class SearchManager : MonoBehaviour
     [Tooltip("同じ色だったBlokDataを格納しておく")]
     List<BlockData> _sameColorList = new List<BlockData>();
 
+    bool Test = false;  
+
 
 
     void Start()
@@ -39,7 +41,7 @@ public class SearchManager : MonoBehaviour
         mapOld = new int[_height, _width];
         CreateMap();
 
-        BlockSearch(10, -10);
+       // BlockSearch(10, -10);
     }
 
     /// <summary>
@@ -54,8 +56,11 @@ public class SearchManager : MonoBehaviour
                 GameObject blockObj = Instantiate(_mapPreab, new Vector3(x, -1 * y, 0), _mapPreab.transform.rotation);
                 var a = Random.Range(0, _materialColor.Count);
                 blockObj.GetComponent<SpriteRenderer>().color = _materialColor[a];
+
                 //ブロックデータを配列に入れる
                 mapData[y, x] = new BlockData(_materialColor[a], blockObj);
+
+                //Debug.Log($"yは{y}xは{x}{mapData[y, x].MyColor}");
             }
         }
     }
@@ -67,41 +72,31 @@ public class SearchManager : MonoBehaviour
     /// <param name="y">y座標</param>
     public void BlockSearch(int x, int y)
     {
-        //配列で使えるように?1をかける
-        var Y = y * -1;
-        BlockData FirstBlock = mapData[x, Y];
+        BlockData FirstBlock = mapData[x, y];
         List<int> BlockXPos = new List<int>();
         List<int> BlockYPos = new List<int>();
 
-        BlockXPos.Add(x);
-        BlockYPos.Add(Y);
+        BlockXPos.Add(y);
+        BlockYPos.Add(x);
 
         List<int> MoveX = new List<int>();
         List<int> MoveY = new List<int>();
 
         //最初に探索する場所を追加する
-        _sameColorList.Add(mapData[x, Y]);
+        _sameColorList.Add(mapData[x, y]);
+
+        Debug.Log(FirstBlock.MyColor);
 
         while (true)
         {
             for (int i = 0; i < BlockYPos.Count; i++)
             {
-                //配列の要素外を指定したとき
-                if (mapData.Length / _width <= BlockYPos[i] + 1 || BlockYPos[i] - 1 < 0)
-                {
-                    Debug.Log("探索が終了しました");
-                    _clear = true;
-                    break;
-                }
-                if (mapData.Length / _height <= BlockXPos[i] + 1 || BlockXPos[i] - 1 < 0)
-                {
-                    Debug.Log("探索が終了しました");
-                    _clear = true;
-                    break;
-                }
 
-                //色が同じだった時そして探索済みではない場合
-                if (mapData[BlockYPos[i] + 1, BlockXPos[i]].MyColor == FirstBlock.MyColor && mapOld[BlockYPos[i] + 1, BlockXPos[i]] != 1)
+                //色が同じだった時そして探索済みではない場合。要素外を指定していないとき
+                if (mapData.Length / _width <= BlockYPos[i] + 1) 
+                {
+                }
+                else if (mapData[BlockYPos[i] + 1, BlockXPos[i]].MyColor == FirstBlock.MyColor && mapOld[BlockYPos[i] + 1, BlockXPos[i]] != 1)
                 {
                     //動いた方向を保存する
                     MoveX.Add(BlockXPos[i]);
@@ -109,9 +104,14 @@ public class SearchManager : MonoBehaviour
 
                     mapOld[BlockYPos[i] + 1, BlockXPos[i]] = 1;
                     _end = true;
+                    //Debug.Log($"色は{mapData[BlockYPos[i] + 1, BlockXPos[i]].MyColor}");
                 }
 
-                if (mapData[BlockYPos[i] - 1, BlockXPos[i]].MyColor == FirstBlock.MyColor && mapOld[BlockYPos[i] - 1, BlockXPos[i]] != 1)
+                if (BlockYPos[i] - 1 < 0) 
+                {
+
+                }
+                else if (mapData[BlockYPos[i] - 1, BlockXPos[i]].MyColor == FirstBlock.MyColor && mapOld[BlockYPos[i] - 1, BlockXPos[i]] != 1)
                 {
                     //動いた方向を保存する
                     MoveX.Add(BlockXPos[i]);
@@ -119,9 +119,14 @@ public class SearchManager : MonoBehaviour
 
                     mapOld[BlockYPos[i] - 1, BlockXPos[i]] = 1;
                     _end = true;
+                    //Debug.Log($"色は{mapData[BlockYPos[i] + 1, BlockXPos[i]].MyColor}");
                 }
 
-                if (mapData[BlockYPos[i], BlockXPos[i] + 1].MyColor == FirstBlock.MyColor && mapOld[BlockYPos[i], BlockXPos[i] + 1] != 1)
+                if (mapData.Length / _height <= BlockXPos[i] + 1) 
+                {
+
+                }
+                else if (mapData[BlockYPos[i], BlockXPos[i] + 1].MyColor == FirstBlock.MyColor && mapOld[BlockYPos[i], BlockXPos[i] + 1] != 1)
                 {
                     //動いた方向を保存する
                     MoveX.Add(BlockXPos[i] + 1);
@@ -131,7 +136,11 @@ public class SearchManager : MonoBehaviour
                     _end = true;
                 }
 
-                if (mapData[BlockYPos[i], BlockXPos[i] - 1].MyColor == FirstBlock.MyColor && mapOld[BlockYPos[i], BlockXPos[i] - 1] != 1)
+                if (BlockXPos[i] - 1 < 0) 
+                {
+
+                }
+                else if (mapData[BlockYPos[i], BlockXPos[i] - 1].MyColor == FirstBlock.MyColor && mapOld[BlockYPos[i], BlockXPos[i] - 1] != 1)
                 {
                     //動いた方向を保存する
                     MoveX.Add(BlockXPos[i] - 1);
@@ -139,7 +148,9 @@ public class SearchManager : MonoBehaviour
 
                     mapOld[BlockYPos[i], BlockXPos[i] - 1] = 1;
                     _end = true;
+                    //Debug.Log($"色は{mapData[BlockYPos[i] + 1, BlockXPos[i]].MyColor}");
                 }
+
 
             }
             
@@ -152,7 +163,7 @@ public class SearchManager : MonoBehaviour
             //同じ色だったものをリストにまとめる
             for(int i = 0; i < MoveY.Count; i++) 
             {
-                _sameColorList.Add(mapData[MoveX[i], MoveY[i]]); 
+                _sameColorList.Add(mapData[MoveY[i], MoveX[i]]); 
             }
 
             MoveX.Clear();
@@ -180,7 +191,8 @@ public class SearchManager : MonoBehaviour
 
         }
 
-        BlockDestroy();
+            BlockDestroy();
+        
     }
 
     /// <summary>
@@ -190,10 +202,17 @@ public class SearchManager : MonoBehaviour
     public int BlockDestroy() 
     {
         var BlockCount = _sameColorList.Count;
+        Debug.Log(BlockCount);
+        if(BlockCount == 1) 
+        {
+            Debug.Log("返しました");
+            _sameColorList.Clear();
+            return 0;
+           
+        }
 
         foreach (var i in _sameColorList) 
         {
-            Debug.Log(i.MyColor);
             i.MyGameObject.SetActive(false);
         }
 
