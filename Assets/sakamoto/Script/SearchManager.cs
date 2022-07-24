@@ -30,11 +30,17 @@ public class SearchManager : MonoBehaviour
     [Tooltip("同じ色だったBlokDataを格納しておく")]
     List<BlockData> _sameColorList = new List<BlockData>();
 
-    private int _nowJustification = -1;
+    private int _clickCount = 0;    
 
-    bool Test = false;
 
+    [SerializeField]List<GameObject> _yazirusiPrefab = new List<GameObject>();
+
+   
     public object BlockCount { get; internal set; }
+
+    [SerializeField]private GameObject _takaraPrefab;
+
+    private GameObject _takara;
 
 
 
@@ -67,6 +73,9 @@ public class SearchManager : MonoBehaviour
                 //Debug.Log($"yは{y}xは{x}{mapData[y, x].MyColor}");
             }
         }
+
+       _takara = Instantiate(_takaraPrefab, new Vector2(Random.Range(2, mapData.Length / _width), Random.Range(2, mapData.Length / _height) * -1), _takaraPrefab.transform.rotation);
+
     }
 
     /// <summary>
@@ -76,6 +85,11 @@ public class SearchManager : MonoBehaviour
     /// <param name="y">y座標</param>
     public void BlockSearch(int x, int y)
     {
+        if (_clickCount >= 10) 
+        {
+            return;
+        }
+        _clickCount++;  
         BlockData FirstBlock = mapData[x, y];
         List<int> BlockXPos = new List<int>();
         List<int> BlockYPos = new List<int>();
@@ -167,10 +181,6 @@ public class SearchManager : MonoBehaviour
             //同じ色だったものをリストにまとめる
             for(int i = 0; i < MoveY.Count; i++) 
             {
-                mapData[MoveY[i], MoveX[i]].MyColor = Color.white;
-                mapData[MoveY[i], MoveX[i]].MyGameObject.GetComponent<SpriteRenderer>().color = Color.white;
-               
-
                 _sameColorList.Add(mapData[MoveY[i], MoveX[i]]); 
             }
 
@@ -199,78 +209,105 @@ public class SearchManager : MonoBehaviour
 
         }
 
-         var a =  BlockDestroy();
+       BlockDestroy();
 
-        if (a != 0) 
+        if (_takara.transform.position.x - y < 0)
         {
-            VerticalChack();
-
+            YazirusiFalse();
+            _yazirusiPrefab[0].SetActive(true);
         }
+        else if (_takara.transform.position.x - y > 0) 
+        {
+            YazirusiFalse();
+            _yazirusiPrefab[1].SetActive(true);
+        }
+
+
+        // var a =  BlockDestroy();
+
+        //if (a != 0) 
+        //{
+        //    VerticalChack();
+
+        //}
     }
 
     /// <summary>
     /// 同じ色のオブジェクトを消去する
     /// </summary>
     /// <returns></returns>
-    public int BlockDestroy() 
+    public int BlockDestroy()
     {
         var BlockCount = _sameColorList.Count;
+        //FindObjectOfType<ChangeScore>().ScoreCount();
         //Debug.Log(BlockCount);
-        if(BlockCount == 1) 
+        //if (BlockCount == 1)
+        //{
+        //    Debug.Log("返しました");
+        //    _sameColorList.Clear();
+        //    return 0;
+
+        //}
+
+        foreach (var i in _sameColorList) 
         {
-            Debug.Log("返しました");
-            _sameColorList.Clear();
-            return 0;
-           
+            i.MyGameObject.SetActive(false);  
         }
-       _sameColorList.Clear();
+        _sameColorList.Clear();
 
         return BlockCount;
     }
 
-    private void VerticalChack() 
+    private void YazirusiFalse() 
     {
-        Debug.Log("呼ばれた");
-        BlockData[] stackData = new BlockData[mapData.Length / _width];
-        for (int y = 0; y < mapData.Length / _width + _nowJustification; y++)
+        foreach (var i in _yazirusiPrefab) 
         {
-            for (int x = 0; x < mapData.Length / _height; x++)
-            {
-              stackData[y] = mapData[x, y];
-            }
-
-            foreach (var i in stackData) 
-            {
-                var Count = 0;
-                if (i.MyColor == Color.white) 
-                {
-                    Count++;
-                }
-
-               Debug.Log($"Countは{Count}");   
-                if (Count == mapData.Length / _width) 
-                {
-                    Debug.Log("縦全て空白です");
-                    leftJustification(y);
-                    return;
-                }
-            }
+            i.SetActive(false);
         }
     }
 
+    //private void VerticalChack()
+    //{
+    //    BlockData[] stackData = new BlockData[mapData.Length / _width];
+    //    for (int y = 0; y < mapData.Length / _width + _nowJustification; y++)
+    //    {
+    //        for (int x = 0; x < mapData.Length / _height; x++)
+    //        {
+    //            stackData[y] = mapData[, y];
+    //        }
+    //        Debug.Log(stackData.Length);
+    //        foreach (var i in stackData)
+    //        {
+    //            var Count = 0;
+    //            if (i.MyColor == Color.white)
+    //            {
+    //                Count++;
+    //            }
 
-    private void leftJustification(int y) 
-    {
-        for (int i = y; y < mapData.Length / _width; i++) 
-        {
-            for (int j = y; y < mapData.Length / _height; j++) 
-            {
-                mapData[i, j] = mapData[i + 1, j];
-            }
-        }
+    //            Debug.Log($"Countは{Count}");
+    //            if (Count == mapData.Length / _width)
+    //            {
+    //                Debug.Log("縦全て空白です");
+    //                leftJustification(y);
+    //                return;
+    //            }
+    //        }
+    //    }
+    //}
 
-        _nowJustification++;
-    }
+
+    //private void leftJustification(int y) 
+    //{
+    //    for (int i = y; y < mapData.Length / _width; i++) 
+    //    {
+    //        for (int j = y; y < mapData.Length / _height; j++) 
+    //        {
+    //            mapData[i, j] = mapData[i + 1, j];
+    //        }
+    //    }
+
+    //    _nowJustification++;
+    //}
 }
 
 public struct BlockData
