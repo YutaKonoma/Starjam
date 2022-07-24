@@ -34,9 +34,9 @@ public class SearchManager : MonoBehaviour
 
     bool Test = false;
 
-    public object BlockCount { get; internal set; }
+    public int BlockCount { get;  }
 
-
+    public ChangeScore changeScore { get; }
 
     void Start()
     {
@@ -214,6 +214,7 @@ public class SearchManager : MonoBehaviour
     /// <returns></returns>
     public int BlockDestroy() 
     {
+        GameObject.FindObjectOfType<ChangeScore>().ScoreCount();
         var BlockCount = _sameColorList.Count;
         //Debug.Log(BlockCount);
         if(BlockCount == 1) 
