@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// ƒV[ƒ“‘JˆÚˆ—
 /// </summary>
-public class MoveScene : MonoBehaviour
+public class ToGameScene : MonoBehaviour
 {
     public float _moveTime = 1f;
 
@@ -14,10 +14,10 @@ public class MoveScene : MonoBehaviour
     public void OnClickButton()
     {
         //Ÿ‚Ìˆ—‚ğ _moveTime •b’x‚ç‚¹‚é–½—ß
-        Invoke("Main", _moveTime);
+        Invoke("Load", _moveTime);
     }
 
-    public void Main()
+    public void Load()
     {
         SceneManager.LoadScene("Test");
     }

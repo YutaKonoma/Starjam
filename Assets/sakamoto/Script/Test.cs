@@ -25,7 +25,7 @@ public class Test : MonoBehaviour
                 _searchManager.BlockSearch((int)hit2d.transform.gameObject.transform.position.y * -1, (int)hit2d.transform.gameObject.transform.position.x);
             }
 
-         
+
         }
     }
 }
