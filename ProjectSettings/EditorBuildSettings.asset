@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BoxClickTestScene.unity
     guid: 160e5c975723ba341a1b63a87ce5f7a4
+  - enabled: 1
+    path: Assets/sakamoto/Scene/Test.unity
+    guid: 9ec1ec2b493119546bde83e1ea575666
+  - enabled: 1
+    path: Assets/sakamoto/Scene/TestScene.unity
+    guid: cfe630de8f2cb044184bc2313f1b244d
   m_configObjects: {}
