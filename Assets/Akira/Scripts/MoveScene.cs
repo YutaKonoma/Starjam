@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// シーンの移動
+/// シーン遷移処理
 /// </summary>
 public class MoveScene : MonoBehaviour
 {
@@ -12,5 +12,6 @@ public class MoveScene : MonoBehaviour
     public void OnClickButton(string scenename)
     {
         SceneManager.LoadScene(scenename);
+        Debug.Log("Move to " + scenename);
     }
 }

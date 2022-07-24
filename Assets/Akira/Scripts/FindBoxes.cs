@@ -11,7 +11,7 @@ public class FindBoxes : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         //クリックしたオブジェクトを取得し、名前を表示する
-        Debug.Log(name);
+        Debug.Log(name + " をクリックした");
     }
 
     // Start is called before the first frame update
