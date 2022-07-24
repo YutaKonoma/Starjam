@@ -30,7 +30,11 @@ public class SearchManager : MonoBehaviour
     [Tooltip("同じ色だったBlokDataを格納しておく")]
     List<BlockData> _sameColorList = new List<BlockData>();
 
-    bool Test = false;  
+    private int _nowJustification = -1;
+
+    bool Test = false;
+
+    public object BlockCount { get; internal set; }
 
 
 
@@ -163,6 +167,10 @@ public class SearchManager : MonoBehaviour
             //同じ色だったものをリストにまとめる
             for(int i = 0; i < MoveY.Count; i++) 
             {
+                mapData[MoveY[i], MoveX[i]].MyColor = Color.white;
+                mapData[MoveY[i], MoveX[i]].MyGameObject.GetComponent<SpriteRenderer>().color = Color.white;
+               
+
                 _sameColorList.Add(mapData[MoveY[i], MoveX[i]]); 
             }
 
@@ -191,8 +199,13 @@ public class SearchManager : MonoBehaviour
 
         }
 
-            BlockDestroy();
-        
+         var a =  BlockDestroy();
+
+        if (a != 0) 
+        {
+            VerticalChack();
+
+        }
     }
 
     /// <summary>
@@ -202,7 +215,7 @@ public class SearchManager : MonoBehaviour
     public int BlockDestroy() 
     {
         var BlockCount = _sameColorList.Count;
-        Debug.Log(BlockCount);
+        //Debug.Log(BlockCount);
         if(BlockCount == 1) 
         {
             Debug.Log("返しました");
@@ -210,15 +223,53 @@ public class SearchManager : MonoBehaviour
             return 0;
            
         }
-
-        foreach (var i in _sameColorList) 
-        {
-            i.MyGameObject.SetActive(false);
-        }
-
        _sameColorList.Clear();
 
         return BlockCount;
+    }
+
+    private void VerticalChack() 
+    {
+        Debug.Log("呼ばれた");
+        BlockData[] stackData = new BlockData[mapData.Length / _width];
+        for (int y = 0; y < mapData.Length / _width + _nowJustification; y++)
+        {
+            for (int x = 0; x < mapData.Length / _height; x++)
+            {
+              stackData[y] = mapData[x, y];
+            }
+
+            foreach (var i in stackData) 
+            {
+                var Count = 0;
+                if (i.MyColor == Color.white) 
+                {
+                    Count++;
+                }
+
+               Debug.Log($"Countは{Count}");   
+                if (Count == mapData.Length / _width) 
+                {
+                    Debug.Log("縦全て空白です");
+                    leftJustification(y);
+                    return;
+                }
+            }
+        }
+    }
+
+
+    private void leftJustification(int y) 
+    {
+        for (int i = y; y < mapData.Length / _width; i++) 
+        {
+            for (int j = y; y < mapData.Length / _height; j++) 
+            {
+                mapData[i, j] = mapData[i + 1, j];
+            }
+        }
+
+        _nowJustification++;
     }
 }
 
