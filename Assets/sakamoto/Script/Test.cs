@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 public class Test : MonoBehaviour
 {
     SearchManager _searchManager;
@@ -21,15 +21,11 @@ public class Test : MonoBehaviour
 
             if (hit2d)
             {
-                if (gameObject.tag == "Takarabako") 
-                {
-                    SceneManager.LoadScene("FailScene");
-                }
                 //Debug.Log($"x‚Í{(int)hit2d.transform.gameObject.transform.position.x}‚™‚Í{ (int)hit2d.transform.gameObject.transform.position.y}‚ðƒNƒŠƒbƒN‚µ‚½");
                 _searchManager.BlockSearch((int)hit2d.transform.gameObject.transform.position.y * -1, (int)hit2d.transform.gameObject.transform.position.x);
             }
 
-         
+
         }
     }
 }

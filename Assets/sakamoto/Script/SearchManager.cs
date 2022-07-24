@@ -23,7 +23,7 @@ public class SearchManager : MonoBehaviour
     List<BlockData> _sameColorList = new List<BlockData>();
     private int _clickCount = 0;
     [SerializeField] List<GameObject> _yazirusiPrefab = new List<GameObject>();
-    public int BlockCount { get;  }
+    public object BlockCount { get; internal set; }
     [SerializeField] private GameObject _takaraPrefab;
     private GameObject _takara;
     void Start()
