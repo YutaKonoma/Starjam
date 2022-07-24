@@ -21,7 +21,10 @@ public class FindBoxes : MonoBehaviour, IPointerClickHandler
         Debug.Log($"xは{(int)eventData.position.x}ｙは{(int)eventData.position.y}をクリックした");
 
         _searchManager.BlockSearch((int)eventData.position.x, (int)eventData.position.y);
-      
+
+        //var _selectBlocklockPos = eventData.pointerCurrentRaycast.gameObject.transform.position;
+
+        //Debug.Log("選んだブロックは " + _selectBlocklockPos + " にあります");
     }
 
     // Update is called once per frame

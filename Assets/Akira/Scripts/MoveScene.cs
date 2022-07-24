@@ -12,6 +12,6 @@ public class MoveScene : MonoBehaviour
     public void OnClickButton(string scenename)
     {
         SceneManager.LoadScene(scenename);
-        Debug.Log("Move to " + scenename);
+        print($"Move to {scenename}");
     }
 }
