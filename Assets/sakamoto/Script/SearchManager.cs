@@ -18,6 +18,7 @@ public class SearchManager : MonoBehaviour
     void Start()
     {
         mapData = new BlockData[_height, _width];
+        CreateMap();
     }
 
     /// <summary>
