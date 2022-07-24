@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// マウスクリックでのオブジェクトの取得
@@ -18,13 +19,9 @@ public class FindBoxes : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         //クリックしたオブジェクトを取得し、名前を表示する
-        Debug.Log($"xは{(int)eventData.position.x}ｙは{(int)eventData.position.y}をクリックした");
-
+      
         _searchManager.BlockSearch((int)eventData.position.x, (int)eventData.position.y);
-
-        //var _selectBlocklockPos = eventData.pointerCurrentRaycast.gameObject.transform.position;
-
-        //Debug.Log("選んだブロックは " + _selectBlocklockPos + " にあります");
+      
     }
 
     // Update is called once per frame
